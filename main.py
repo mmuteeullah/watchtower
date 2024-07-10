@@ -29,7 +29,7 @@ async def healthCheck():
 @app.post("/webhook")
 async def receive_alert(alert: Alert):
     try:
-        AlertManager(alert).enrich().notify()
+        AlertManager(alert).notify()
         return {"message": "ok"}
     except ValidationError as e:
         raise e

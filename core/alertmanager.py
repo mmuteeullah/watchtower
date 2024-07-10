@@ -26,7 +26,7 @@ class AlertManager():
             prometheus = Prometheus()
             cpu_usage = float(prometheus.get_cpu_usage(self.alert.labels.job))
             if cpu_usage > Config.cpu_usage_threshold:
-                notification_service.send_to_slack(f"CPU usage is {cpu_usage} which is above the threshold")
+                notification_service.send_to_slack(f"CPU usage is {cpu_usage} which is above the threshold",critical=True)
                 self.set_pager_flag = True
                 self.kill_container_flag = True
         except Exception as e:
@@ -45,18 +45,17 @@ class AlertManager():
 
     def notify_critical(self):
         notification_service = Notification()
-
-        message = f"Critical Alert: {self.alert.labels.alertname} - {self.alert.annotations.summary}"
-        notification_service.send_to_slack(message)
+        notification_service.send_to_slack(f"Critical Alert: {self.alert.labels.alertname} - {self.alert.annotations.summary}",critical=True)
         if self.set_pager_flag:
             # notification_service.send_to_pagerduty(alert)
-            notification_service.send_to_slack("PagerDuty incident created for critical alert")
+            notification_service.send_to_slack("PagerDuty incident created for critical alert",critical=True)
         if self.kill_container_flag:
             kill_container_by_name(self.alert.labels.container)
-            notification_service.send_to_slack(f"Container {self.alert.labels.container} killed successfully")
+            notification_service.send_to_slack(f"Container {self.alert.labels.container} killed successfully",critical=True)
 
     def notify(self):
         if self.alert.labels.severity == SeverityType.CRITICAL:
+            self.enrich()
             self.notify_critical()
         elif self.alert.labels.severity == SeverityType.WARNING:
             self.notify_warning()
