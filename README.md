@@ -126,8 +126,8 @@ Before running the application, you'll need the following:
 
 ### Alert Type ==> Warning
 
-![Warning FLow](warning.png "Warning Flow")
+![Warning FLow](/assets/warning.png "Warning Flow")
 
 ### Alert Type ==> Critical
 
-![Critical Flow](critical.png "Critical Flow")
+![Critical Flow](/assets/critical.png "Critical Flow")
