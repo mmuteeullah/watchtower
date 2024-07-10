@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/alert.rules.yml:/etc/prometheus/alert.rules.yml
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - "9090:9090"
+    networks:
+      - watchtower-network
+
+  alertmanager:
+    image: prom/alertmanager:latest
+    volumes:
+      - ./alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - "9093:9093"
+    networks:
+      - watchtower-network
+
+  custom-app:
+    build: ./custom-app
+    ports:
+      - "8000:8000"
+    networks:
+      - watchtower-network
+
+  webhook-receiver:
+    build: ./webhook-receiver
+    ports:
+      - "5001:5001"
+    networks:
+      - watchtower-network
+
+networks:
+  watchtower-network:
+    external: true
