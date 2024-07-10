@@ -1,4 +1,7 @@
 from flask import Flask, request, jsonify
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 
@@ -6,6 +9,7 @@ app = Flask(__name__)
 def webhook():
     alert = request.json
     print(request.json)
+    logging.debug(alert)
     if alert:
         print("Received alert:", alert)
         return jsonify({"message": "Received alert"}), 200

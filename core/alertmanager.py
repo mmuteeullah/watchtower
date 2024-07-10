@@ -7,7 +7,7 @@ from helper_utils import kill_container_by_name
 class Config():
     """ 
     Config class to set the CPU usage threshold
-        Usage: config = Config(cpu_usage=90.0)
+    Usage: config = Config(cpu_usage=90.0)
     """
     cpu_usage_threshold = 80.0
     def __init__(self, cpu_usage_threshold: float):

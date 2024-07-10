@@ -9,3 +9,11 @@ groups:
         annotations:
           summary: 'Instance {{ $labels.instance }} down'
           description: '{{ $labels.instance }} of job {{ $labels.job }} has been down for more than 1 minute.'
+      - alert: High CPU Usage
+        expr: cpu_usage{instance="custom-app:8000", job="custom-app"}
+        for: 30s
+        labels:
+          severity: 'critical'
+        annotations:
+          summary: 'Instance {{ $labels.instance }} High CPU Usage'
+          description: Job {{ $labels.job }} has high CPU usage.'

@@ -1,7 +1,7 @@
 import requests
 
 class Notification:
-    def send_to_pagerduty(self, alert):
+    def send_to_pagerduty(self, alert:Al):
         """
         Send an alert to PagerDuty
 
@@ -32,6 +32,6 @@ class Notification:
         Usage:
         send_to_slack("Hello World")
         """
-        webhook_url = "https://hooks.slack.com/services/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"
+        webhook_url = "https://hooks.slack.com/services/YOUR_SLACK_WEBHOOK_URL"
         payload = {"text": message}
         requests.post(webhook_url, json=payload)
