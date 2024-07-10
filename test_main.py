@@ -31,8 +31,7 @@ def test_receive_alert_warning():
     }
     response = client.post("/webhook", json=alert)
     assert response.status_code == 200
-    assert "enriched_alert" in response.json()
-    assert "action_result" in response.json()
+    assert "message" in response.json()
 
 def test_receive_alert_critical():
     alert = {
@@ -61,5 +60,4 @@ def test_receive_alert_critical():
     }
     response = client.post("/webhook", json=alert)
     assert response.status_code == 200
-    assert "enriched_alert" in response.json()
-    assert "action_result" in response.json()
+    assert "message" in response.json()

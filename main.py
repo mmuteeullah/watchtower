@@ -1,12 +1,10 @@
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
-from fastapi import Request, HTTPException
-from pydantic import BaseModel, ValidationError
-from models.models import Alert
-from enrich.enrich import enrich_critical_alert
-from actions.action import take_action, take_critical_action
-from typing import Dict, Any
+from fastapi import Request
+from pydantic import ValidationError
+from models import Alert
+from core import AlertManager
 
 app = FastAPI()
 
@@ -31,14 +29,7 @@ async def healthCheck():
 @app.post("/webhook")
 async def receive_alert(alert: Alert):
     try:
-        if alert.labels.severity == "CRITICAL":
-            enriched_alert, set_pager_flag, kill_container_flag = enrich_critical_alert(alert)
-            action_result = take_critical_action(enriched_alert, set_pager_flag=set_pager_flag, kill_container_flag=kill_container_flag)
-        elif alert.labels.severity == "WARNING":
-            enriched_alert = alert
-            action_result = take_action(enriched_alert)
-        else:
-            raise HTTPException(status_code=400, detail="Invalid severity level")
-        return {"enriched_alert": enriched_alert.model_dump(), "action_result": action_result}
+        AlertManager(alert).enrich().notify()
+        return {"message": "ok"}
     except ValidationError as e:
         raise e

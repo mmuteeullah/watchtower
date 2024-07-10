@@ -1,6 +1,11 @@
 # models.py
 from pydantic import BaseModel
 from typing import Dict, Any
+from enum import Enum
+
+class SeverityType(str, Enum):
+    CRITICAL = "CRITICAL"
+    WARNING = "WARNING"
 
 class AlertAnnotations(BaseModel):
     description: str
@@ -20,7 +25,7 @@ class AlertLabels(BaseModel):
     region: str
     replica: str
     service: str
-    severity: str
+    severity: SeverityType
 
 class Alert(BaseModel):
     annotations: AlertAnnotations
